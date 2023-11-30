@@ -84,8 +84,12 @@ void serial_hook_init(void)
         return;
     }
 
-    hook_table_apply(NULL, "kernel32.dll", serial_syms, _countof(serial_syms));
+    serial_hook_apply_hooks(NULL);
     serial_hook_initted = true;
+}
+
+void serial_hook_apply_hooks(HMODULE target) {
+    hook_table_apply(target, "kernel32.dll", serial_syms, _countof(serial_syms));
 }
 
 static BOOL WINAPI my_ClearCommError(

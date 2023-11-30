@@ -48,3 +48,4 @@ __attribute__((deprecated("Use iohook_open_nul_fd instead")))
 HRESULT iohook_open_nul_fd(HANDLE *fd);
 HRESULT iohook_push_handler(iohook_fn_t fn);
 HRESULT iohook_invoke_next(struct irp *irp);
+void iohook_apply_hooks(HMODULE target);

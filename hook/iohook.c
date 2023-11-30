@@ -229,11 +229,7 @@ static void iohook_init(void)
 
     /* Splice iohook into IAT entries referencing Win32 I/O APIs */
 
-    hook_table_apply(
-            NULL,
-            "kernel32.dll",
-            iohook_kernel32_syms,
-            _countof(iohook_kernel32_syms));
+    iohook_apply_hooks(NULL);
 
     /* Here be dragons:
 
@@ -279,6 +275,15 @@ static void iohook_init(void)
     iohook_initted = true;
 
     LeaveCriticalSection(&iohook_lock);
+}
+
+void iohook_apply_hooks(HMODULE target)
+{
+    hook_table_apply(
+            target,
+            "kernel32.dll",
+            iohook_kernel32_syms,
+            _countof(iohook_kernel32_syms));
 }
 
 // Deprecated
