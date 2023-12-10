@@ -17,6 +17,7 @@
 #include "hook/hr.h"
 #include "hook/iohook.h"
 #include "hook/table.h"
+#include "hook/procaddr.h"
 
 /* Helpers */
 
@@ -230,6 +231,11 @@ static void iohook_init(void)
     /* Splice iohook into IAT entries referencing Win32 I/O APIs */
 
     iohook_apply_hooks(NULL);
+    proc_addr_table_push(
+            NULL,
+            "KERNEL32.DLL",
+            iohook_kernel32_syms,
+            _countof(iohook_kernel32_syms));
 
     /* Here be dragons:
 

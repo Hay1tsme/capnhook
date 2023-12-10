@@ -17,6 +17,8 @@ hook_lib = static_library(
         'pe.h',
         'peb.c',
         'peb.h',
+        'procaddr.c',
+        'procaddr.h',
         'process.c',
         'process.h',
         'table.c',

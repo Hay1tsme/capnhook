@@ -17,6 +17,7 @@
 #include "hook/table.h"
 
 #include "hooklib/serial.h"
+#include "hook/procaddr.h"
 
 /* RS232 API hooks */
 
@@ -85,6 +86,7 @@ void serial_hook_init(void)
     }
 
     serial_hook_apply_hooks(NULL);
+    proc_addr_table_push(NULL, "KERNEL32.DLL", serial_syms, _countof(serial_syms));
     serial_hook_initted = true;
 }
 

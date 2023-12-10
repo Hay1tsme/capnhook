@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <libgen.h>
 
-#include "hooklib/procaddr.h"
+#include "hook/procaddr.h"
 
 #include "hook/table.h"
 
