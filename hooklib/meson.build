@@ -3,6 +3,8 @@ hooklib_lib = static_library(
     include_directories : inc,
     c_pch : '../precompiled.h',
     sources : [
+        'procaddr.c',
+        'procaddr.h',
         'serial.c',
         'serial.h',
         'uart.c',
