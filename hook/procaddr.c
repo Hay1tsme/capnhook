@@ -34,7 +34,6 @@ HRESULT proc_addr_table_push(
     HRESULT hr;
     struct proc_addr_table *new_item;
     struct proc_addr_table *new_mem;
-    size_t target_len = strlen(target);
 
     proc_addr_hook_init();
 
@@ -54,9 +53,9 @@ HRESULT proc_addr_table_push(
     }
 
     new_item = &new_mem[proc_addr_hook_count];
-    strcpy_s(new_item->name, target_len, target);
+    new_item->name = target;
     new_item->nsyms = nsyms;
-    memcpy(new_item->syms, syms, sizeof(*syms));
+    new_item->syms = (struct hook_symbol *) syms;
 
     proc_addr_hook_list = new_mem;
     proc_addr_hook_count++;
