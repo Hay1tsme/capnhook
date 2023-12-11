@@ -27,13 +27,14 @@ static const struct hook_symbol win32_hooks[] = {
 HRESULT proc_addr_table_push(
     HMODULE loader_mod,
     const char *target,
-    struct hook_symbol *syms,
+    const struct hook_symbol *syms,
     size_t nsyms
 )
 {
     HRESULT hr;
     struct proc_addr_table *new_item;
     struct proc_addr_table *new_mem;
+    size_t target_len = strlen(target);
 
     proc_addr_hook_init();
 
@@ -53,9 +54,9 @@ HRESULT proc_addr_table_push(
     }
 
     new_item = &new_mem[proc_addr_hook_count];
-    new_item->name = target;    
+    strcpy_s(new_item->name, target_len, target);
     new_item->nsyms = nsyms;
-    new_item->syms = syms;
+    memcpy(new_item->syms, syms, sizeof(*syms));
 
     proc_addr_hook_list = new_mem;
     proc_addr_hook_count++;

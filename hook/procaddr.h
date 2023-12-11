@@ -14,7 +14,7 @@ struct proc_addr_table {
 HRESULT proc_addr_table_push(
     HMODULE loader_mod,
     const char *target,
-    struct hook_symbol *syms,
+    const struct hook_symbol *syms,
     size_t nsyms
 );
 void proc_addr_insert_hooks(HMODULE target);
