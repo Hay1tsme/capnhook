@@ -36,6 +36,7 @@ static BOOL WINAPI my_SetCommState(HANDLE fd, const DCB *dcb);
 static BOOL WINAPI my_SetCommTimeouts(HANDLE fd, COMMTIMEOUTS *timeouts);
 static BOOL WINAPI my_SetupComm(HANDLE fd, uint32_t in_q, uint32_t out_q);
 static BOOL WINAPI my_SetCommBreak(HANDLE fd);
+static BOOL WINAPI my_GetCommModemStatus(HANDLE fd, DWORD modem_stat);
 
 static struct hook_symbol serial_syms[] = {
     {
@@ -74,6 +75,9 @@ static struct hook_symbol serial_syms[] = {
     }, {
         .name   = "ClearCommBreak",
         .patch  = my_ClearCommBreak,
+    },{
+        .name   = "GetCommModemStatus",
+        .patch  = my_GetCommModemStatus,
     },
 };
 
@@ -727,6 +731,31 @@ static BOOL WINAPI my_ClearCommBreak(HANDLE fd)
     }
 
     SetLastError(ERROR_SUCCESS);
+
+    return TRUE;
+}
+
+static BOOL WINAPI my_GetCommModemStatus(HANDLE fd, DWORD modem_stat)
+{
+// IOCTL_SERIAL_GET_MODEMSTATUS
+    struct irp irp;
+    HRESULT hr;
+
+    memset(&irp, 0, sizeof(irp));
+    irp.op = IRP_OP_IOCTL;
+    irp.fd = fd;
+    irp.ioctl = IOCTL_SERIAL_GET_MODEMSTATUS;
+    modem_stat = 0;
+
+    hr = iohook_invoke_next(&irp);
+
+    if (FAILED(hr)) {
+        return hr_propagate_win32(hr, FALSE);
+    }
+
+    SetLastError(ERROR_SUCCESS);
+
+    modem_stat = irp.modem_state;
 
     return TRUE;
 }
