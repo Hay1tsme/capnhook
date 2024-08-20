@@ -241,6 +241,13 @@ static HRESULT uart_handle_ioctl(struct uart *uart, struct irp *irp)
     case IOCTL_SERIAL_GET_WAIT_MASK:
         return iobuf_write(&irp->read, &uart->mask, sizeof(uart->mask));
 
+    case IOCTL_SERIAL_GET_MODEM_CONTROL:
+        return iobuf_write(&irp->read, &uart->modem_control, sizeof(uart->modem_control));
+
+    case IOCTL_SERIAL_GET_MODEMSTATUS:
+        ULONG status = (uart->cts_on << 4) | (uart->dsr_on << 5) | (uart->ring_on << 6) | (uart->rlsd_on << 7);
+        return iobuf_write(&irp->read, &status, sizeof(status));
+
     case IOCTL_SERIAL_SET_BAUD_RATE:
         return iobuf_read(&irp->write, &uart->baud, sizeof(uart->baud));
 
@@ -259,16 +266,30 @@ static HRESULT uart_handle_ioctl(struct uart *uart, struct irp *irp)
     case IOCTL_SERIAL_SET_WAIT_MASK:
         return iobuf_read(&irp->write, &uart->mask, sizeof(uart->mask));
 
+    case IOCTL_SERIAL_SET_MODEM_CONTROL:
+        return iobuf_read(&irp->write, &uart->modem_control, sizeof(uart->modem_control));
+
+    case IOCTL_SERIAL_CLR_DTR:
+        uart->dtr_on = false;
+        return S_OK;
+    
+    case IOCTL_SERIAL_CLR_RTS:
+        uart->rts_on = false;
+        return S_OK;
+    
+    case IOCTL_SERIAL_SET_DTR:
+        uart->dtr_on = true;
+        return S_OK;
+    
+    case IOCTL_SERIAL_SET_RTS:
+        uart->rts_on = true;
+        return S_OK;
+    
     /* These can be safely ignored */
     case IOCTL_SERIAL_SET_BREAK_ON:
     case IOCTL_SERIAL_SET_BREAK_OFF:
-    case IOCTL_SERIAL_CLR_DTR:
-    case IOCTL_SERIAL_CLR_RTS:
-    case IOCTL_SERIAL_SET_DTR:
-    case IOCTL_SERIAL_SET_RTS:
     case IOCTL_SERIAL_SET_XOFF:
     case IOCTL_SERIAL_SET_XON:
-
     case IOCTL_SERIAL_PURGE:
     case IOCTL_SERIAL_SET_QUEUE_SIZE:
         return S_OK;

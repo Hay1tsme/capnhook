@@ -25,6 +25,13 @@ struct uart {
     SERIAL_LINE_CONTROL line;
     SERIAL_TIMEOUTS timeouts;
     DWORD mask;
+    bool cts_on;
+    bool dsr_on;
+    bool ring_on;
+    bool rlsd_on;
+    bool dtr_on;
+    bool rts_on;
+    ULONG modem_control;
     struct iobuf written;
     struct iobuf readable;
 };

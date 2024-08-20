@@ -35,7 +35,6 @@ struct irp {
     uint32_t seek_origin;
     int64_t seek_offset;
     uint64_t seek_pos;
-    uint16_t modem_state;
 };
 
 typedef HRESULT (*iohook_fn_t)(struct irp *irp);

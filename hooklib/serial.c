@@ -745,7 +745,8 @@ static BOOL WINAPI my_GetCommModemStatus(HANDLE fd, DWORD modem_stat)
     irp.op = IRP_OP_IOCTL;
     irp.fd = fd;
     irp.ioctl = IOCTL_SERIAL_GET_MODEMSTATUS;
-    modem_stat = 0;
+    irp.read.bytes = (uint8_t *) &modem_stat;
+    irp.read.nbytes = sizeof(modem_stat);
 
     hr = iohook_invoke_next(&irp);
 
@@ -754,8 +755,6 @@ static BOOL WINAPI my_GetCommModemStatus(HANDLE fd, DWORD modem_stat)
     }
 
     SetLastError(ERROR_SUCCESS);
-
-    modem_stat = irp.modem_state;
 
     return TRUE;
 }
