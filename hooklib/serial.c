@@ -544,12 +544,12 @@ static BOOL WINAPI my_SetCommState(HANDLE fd, const DCB *dcb)
         break;
 
     case RTS_CONTROL_ENABLE:
-        handflow.ControlHandShake |= SERIAL_RTS_CONTROL;
+        handflow.FlowReplace |= SERIAL_RTS_CONTROL;
 
         break;
 
     case RTS_CONTROL_HANDSHAKE:
-        handflow.ControlHandShake |= SERIAL_RTS_HANDSHAKE;
+        handflow.FlowReplace |= SERIAL_RTS_HANDSHAKE;
 
         break;
 
