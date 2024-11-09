@@ -1,7 +1,7 @@
+#include <shlwapi.h>
 #include <windows.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <libgen.h>
 
 #include "hook/procaddr.h"
 
@@ -89,17 +89,16 @@ static void proc_addr_hook_init(void)
 FARPROC WINAPI my_GetProcAddress(HMODULE hModule, const char *name)
 {
     uintptr_t ordinal = (uintptr_t) name;
-    char mod_path[PATH_MAX];
-    char *mod_name;
+    char mod_path[MAX_PATH];
     const struct hook_symbol *sym;
     FARPROC result = next_GetProcAddress(hModule, name);
     
-    GetModuleFileNameA(hModule, mod_path, PATH_MAX);
-    mod_name = basename(mod_path);
-
+    GetModuleFileNameA(hModule, mod_path, MAX_PATH);
+    PathStripPathA(mod_path);
+    
     for (int i = 0; i < proc_addr_hook_count; i++) {
 
-        if (strcmp(proc_addr_hook_list[i].name, mod_name) == 0) {
+        if (strcmp(proc_addr_hook_list[i].name, mod_path) == 0) {
             
             for (int j = 0; j < proc_addr_hook_list[i].nsyms; j++) {
                 sym = &proc_addr_hook_list[i].syms[j];
