@@ -104,14 +104,19 @@ FARPROC WINAPI my_GetProcAddress(HMODULE hModule, const char *name)
                 sym = &proc_addr_hook_list[i].syms[j];
                 
                 if (ordinal > 0xFFFF) {
-
                     if (strcmp(sym->name, name) == 0) {
+                        if (sym->link != NULL && *sym->link == NULL) {
+                            *sym->link = result;
+                        }
                         result = (FARPROC) sym->patch;
                     }
                 }
 
                 else {
                     if (sym->ordinal == ordinal) {
+                        if (sym->link != NULL && *sym->link == NULL) {
+                            *sym->link = result;
+                        }
                         result = (FARPROC) sym->patch;
                     }
                 }
