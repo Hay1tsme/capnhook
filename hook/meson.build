@@ -1,7 +1,6 @@
 hook_lib = static_library(
     'hook',
     include_directories : inc,
-    c_pch : '../precompiled.h',
     sources : [
         'args.c',
         'args.h',
